@@ -59,7 +59,3 @@
   const route = useRoute()
   let showMenu = ref(false)
 </script>
-
-<style scoped>
-
-</style>
