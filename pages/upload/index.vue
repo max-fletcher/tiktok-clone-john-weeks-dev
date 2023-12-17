@@ -149,7 +149,7 @@
   let errors = ref(null) // used to display errors if any
   let isUploading = ref(null) // used to show if upload is in progress or not
 
-  // IT IS IMPERATIVE THAT YOU 
+  // IT IS IMPERATIVE THAT YOU PASS IN 'caption' AS AN ARGUMENT TO THE FUNCTION WHICH IS USED AS THE 2nd PARAM OF THE WATCH FUNCTION. ELSE THIS WON'T WORK BECAUSE THE IF CONDITION WILL FAIL EVERY TIME.
   watch(() => caption.value, (caption) => {
     if(caption.length >= 150){
       errorType.value = 'caption'
