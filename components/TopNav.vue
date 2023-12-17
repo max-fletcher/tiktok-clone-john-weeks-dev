@@ -39,7 +39,7 @@
               <img @click="showMenu = !showMenu" class="rounded-full" width="33" src="https://picsum.photos/id/83/300/320" alt="" />
             </button>
             <div v-if="showMenu" id="PopupMenu" class="absolute bg-white rounded-lg py-1.5 w-[200px] shadow-xl border top-[43px] -right-2">
-                <NuxtLink @click="$event = showMenu = false" class="flex items-center justify-start py-3 px-2 hover:bg-gray-100 cursor-pointer">
+                <NuxtLink @click="$event => showMenu = false" class="flex items-center justify-start py-3 px-2 hover:bg-gray-100 cursor-pointer">
                   <Icon name="ph:user" size="20" />
                   <span class="pl-2 font-semibold text-sm">Profile</span>
                 </NuxtLink>
