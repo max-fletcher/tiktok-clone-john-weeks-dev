@@ -10,8 +10,9 @@
   const props = defineProps(['errorType'])
   const { errorType } = toRefs(props)
 
-  let error = ref('awd awdaw daw d')
+  let error = ref('')
 
+  // IT IS IMPERATIVE THAT YOU PASS IN 'errorType' AS AN ARGUMENT TO THE FUNCTION WHICH IS USED AS THE 2nd PARAM OF THE WATCH FUNCTION. ELSE THIS WON'T WORK BECAUSE THE IF CONDITION WILL FAIL EVERY TIME.
   watch(() => errorType.value, () => {
     console.log(errorType);
     

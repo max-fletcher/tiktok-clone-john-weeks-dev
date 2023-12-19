@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     @mouseenter="isHover(true)"
     @mouseleave="isHover(false)"
     class="relative brightness-90 hover:brightness-[1.1] cursor-pointer"
@@ -57,8 +57,6 @@
       })
     }
   })
-
-  console.log(toRaw(video.value), toRaw(isLoaded.value));
 
   // WILL PAUSE THE VIDEO, REWIND THE VIDEO BACK TO TIME=0 AND SET VIDEO SRC TO EMPTY STRING(I.E STOP THE VIDEO)
   onBeforeUnmount(() => {
