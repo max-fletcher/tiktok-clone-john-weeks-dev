@@ -47,7 +47,7 @@
       }
   })
 
-  // FOR 2-WAY BINDING COMPONENT PARENT REFS WITH CHILD REFS. PARENT HAS TO USE v-model:[VARIABLE_NAME] I BELIEVE FOR THIS TO WORK.
+  // FOR 2-WAY BINDING COMPONENT PARENT REFS WITH CHILD REFS. PARENT HAS TO USE v-model:[VARIABLE_NAME] FOR THIS TO WORK. SEE THIS: https://vuejs.org/guide/components/v-model.html
   const inputComputed = computed({
       get: () => {
         console.log('get', toRaw(input.value));

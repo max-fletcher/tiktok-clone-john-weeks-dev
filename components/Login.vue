@@ -5,7 +5,7 @@
     <div class="px-6 pb-1.5 text-[15px]">Email Address</div>
 
     <div class="px-6 pb-2">
-      <!-- CUSTOM INPUT COMPONENT. 'inputType', 'autoFocus' AND 'error' ARE PROPS -->
+      <!-- CUSTOM REUSABLE INPUT COMPONENT. -->
       <TextInput 
         placeholder="Email Address"
         v-model:input="email"
@@ -14,9 +14,37 @@
         error=""
       />
     </div>
+
+    <div class="px-6 pb-2">
+      <!-- CUSTOM REUSABLE INPUT COMPONENT. -->
+      <TextInput 
+        placeholder="Password"
+        v-model:input="password"
+        inputType="password"
+      />
+    </div>
+
+    <div class="px-6 text-[] text-gray-600">Forgot Password ?</div>
+
+    <div class="px-6 pb-2 mt-6">
+      <button 
+        :disabled="(!email || !password)" 
+        @click="login" 
+        :class="(!email || !password) ? 'bg-gray-200' : 'bg-[#F02C56]'" 
+        class="w-full text-[17px] font-semibold text-white py-3 rounded-sm"
+      >
+        Log In
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
   const email = ref('')
+  const password = ref('')
+  const errors = ref('')
+
+  const login = () => {
+    console.log('Henlo');
+  }
 </script>
