@@ -50,11 +50,11 @@
   // FOR 2-WAY BINDING COMPONENT PARENT REFS WITH CHILD REFS. PARENT HAS TO USE v-model:[VARIABLE_NAME] FOR THIS TO WORK. SEE THIS: https://vuejs.org/guide/components/v-model.html
   const inputComputed = computed({
       get: () => {
-        console.log('get', toRaw(input.value));
+        // console.log('get', toRaw(input.value));
         return input.value
       },
       set: (val) => {
-        console.log('set', val);
+        // console.log('set', val);
         emit('update:input', val)
       }
   })

@@ -24,7 +24,7 @@
       />
     </div>
 
-    <div class="px-6 text-[] text-gray-600">Forgot Password ?</div>
+    <div class="px-6 text-[12px] text-gray-600">Forgot Password ?</div>
 
     <div class="px-6 pb-2 mt-6">
       <button 
@@ -45,6 +45,6 @@
   const errors = ref('')
 
   const login = () => {
-    console.log('Henlo');
+    console.log('Login Henlo');
   }
 </script>
