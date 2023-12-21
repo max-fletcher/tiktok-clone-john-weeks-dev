@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 
+// THE <-- persist: true --> IS USING NUXT_PINIA_PERSIST PACKAGE TO STORE THESE STORES AS COOKIES
 export const useGeneralStore = defineStore('general', {
   state: () => ({
     isLoginOpen : '',
@@ -14,4 +15,5 @@ export const useGeneralStore = defineStore('general', {
   actions: {
     //
   },
+  persist: true,
 })
