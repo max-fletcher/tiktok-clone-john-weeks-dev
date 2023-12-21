@@ -44,11 +44,63 @@
                 class="hidden"
                 type="file"
                 id="image"
-                @input="getUploadedFile"
+                @input="getUploadedImage"
                 accept="image/png, image.jpeg, image/jpg"
               />
             </div>
           </div>
+
+          <div 
+            id="userNameSection" 
+            class="flex flex-col border-b sm:h-[118px] px-1.5 py-2 mt-1.5 w-full"
+          >
+            <div class="font-semibold text-[15px] sm:mb-0 mb-2.5 text-gray-700 sm:w-[160px] sm:text-left text-center">
+              Username
+            </div>
+            <div class="flex items-center justify-center sm:-mt-6">
+              <div class="sm:w-[60%] w-full max-w-md">
+                <!-- CUSTOM REUSABLE INPUT COMPONENT. -->
+                <TextInput 
+                  placeholder="Username"
+                  v-model:input="userName"
+                  inputType="text"
+                  max="30"
+                  error=""
+                />
+
+                <div class="text-[11px] text-gray-500 mt-4">
+                  Usernames can only contain letters, numbers, underscores, and periods. 
+                  Changing your username will also change your profile link.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div 
+            id="BioSection" 
+            class="flex flex-col sm:h-[120px] px-1.5 py-2 w-full"
+          >
+            <div class="font-semibold text-[15px] sm:mb-0 mb-2.5 text-gray-700 sm:w-[160px] sm:text-left text-center">
+              Bio
+            </div>
+            <div class="flex items-center justify-center sm:-mt-6">
+              <div class="sm:w-[60%] w-full max-w-md">
+                <textarea 
+                  v-model="userBio" 
+                  maxlength="80" 
+                  cols="40" 
+                  rows="4" 
+                  class="resize-none w-full bg-[#F1F1F2] text-gray-800 border border-gray-300 rounded-md py-2.5 px-3 focus:outline-none"
+                >
+                </textarea>
+                <div v-if="userBio" class="text-[11px] text-gray-500">{{ userBio.length }}/80</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-else class="w-full h-[430px]">
+          <Cropper :src="uploadedImage" class="h-[430px]" ref="cropper" stencil-component="CircleStencil" />
         </div>
       </div>
     </div>
@@ -56,11 +108,21 @@
 </template>
 
 <script setup lang="ts">
+  // ANYTHING WHICH IS NOT IN COMPONENTS/PAGES(etc.) FOLDER WILL NOT BE IMPORTED SO YOU NEED TO IMPORT PACKAGE MANUALLY BOTH IN VUE AND JS FILES
+  import { Cropper, CircleStencil } from 'vue-advanced-cropper'
+  import 'vue-advanced-cropper/dist/style.css';
+
   const { $generalStore } = useNuxtApp()
 
+  let file = ref(null)
+  let cropper = ref(null)
   let uploadedImage = ref(null)
+  let userImage = ref(null)
+  let userName = ref(null)
+  let userBio = ref(null)
+  let isUpdated = ref(false)
 
-  const getUploadedFile = () => {
-    console.log('file uploaded');
+  const getUploadedImage = (e) => {
+    console.log('uploaded image');
   }
 </script>
