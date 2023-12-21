@@ -50,9 +50,6 @@
       <PostUser />
       <PostUser />
       <PostUser />
-      <PostUser />
-      <PostUser />
-      <PostUser />
     </div>
   </div>
 </template>
