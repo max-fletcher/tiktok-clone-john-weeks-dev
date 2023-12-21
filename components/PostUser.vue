@@ -59,8 +59,7 @@
     if(video.value) {
       if(video.value.readyState){
         setTimeout(() => {
-              console.log('inside settimeout asa');
-              isLoaded.value = true
+          isLoaded.value = true
         }, 200)
       }
       // if (window.addEventListener) {
