@@ -3,14 +3,14 @@
     <NuxtLayout>
       <NuxtPage />
       <AuthOverlay v-if="isLoginOpen" />
-      <EditProfileOverlay />
-      <!-- v-if="isEditProfileOpen" -->
+      <EditProfileOverlay v-if="isEditProfileOpen" />
     </NuxtLayout>
   </div>
 </template>
 
 <script setup lang="ts">
-  // CONVERTS STORE TO REF SO IT CAN BE USED IN ANY COMPONENT. ELSE, AN ERROR WILL BE THROWN.
+  // 'storeToRefs' CONVERTS STORE STATES AND GETTERS TO REFS SO IT CAN BE DESTRUCTURED WHILE MAINTAINING REACTIVITY, AND IF NEED BE, PASSED AS PROP TO ANY COMPONENT. 
+  // ACTIONS CAN BE DESTRUCTURED DIRECTLY WITHOUT USING 'storeToRefs'.
   import { storeToRefs } from 'pinia'
 
   // IMPORT '$generalStore' FROM useNuxtApp(ALIASED INSIDE plugins/store) AND GET THE 'isLoginOpen' STATE AS A REF FROM IT
