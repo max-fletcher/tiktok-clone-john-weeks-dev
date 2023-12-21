@@ -38,7 +38,10 @@
         src="/cowe.mp4"
       />
 
-      <div v-if="!isLoaded" class="flex items-center justify-center bg-black bg-opacity-70 h-screen lg:min-w-[480px]">
+      <div 
+        v-if="!isLoaded" 
+        class="flex items-center justify-center bg-black bg-opacity-70 h-screen lg:min-w-[480px]"
+      >
         <Icon class="animate-spin ml-1" name="mingcute:loading-line" size="100" color="#FFFFFF" />
       </div>
       <div class="bg-black bg-opacity-70 lg:min-w-[480px]">

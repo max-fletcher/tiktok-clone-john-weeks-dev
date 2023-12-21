@@ -7,7 +7,11 @@
           User Name
         </div>
         <div class="text-[18px] truncate">User Name</div>
-        <button v-if="true" class="flex items-center rounded-md py-1.5 px-3.5 text-[15px] font-semibold border hover:bg-gray-100">
+        <button 
+          v-if="true" 
+          @click="$generalStore.isEditProfileOpen = true"
+          class="flex items-center rounded-md py-1.5 px-3.5 text-[15px] font-semibold border hover:bg-gray-100"
+        >
           <Icon class="mt-0.5 mr-1" name="mdi:pencil" size="18" />
           Edit Profile
         </button>
@@ -62,4 +66,6 @@
     // KEBAB-CASE BY NUXT FOR DEFINE-COMPOSABLES
     layout: 'main-layout',
   })
+
+  const { $generalStore } = useNuxtApp()
 </script>
