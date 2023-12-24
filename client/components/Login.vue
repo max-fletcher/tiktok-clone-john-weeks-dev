@@ -40,11 +40,24 @@
 </template>
 
 <script setup lang="ts">
+  const { $userStore, $generalStore } = useNuxtApp()
+
   const email = ref('')
   const password = ref('')
   const errors = ref('')
 
-  const login = () => {
-    console.log('Login Henlo');
+  const login = async () => {
+
+    errors.value = null
+
+    try {
+      $userStore.getTokens()
+      $userStore.login(email.value, password.value)
+      $userStore.getUser()
+
+      $generalStore.isLoginOpen = false
+    } catch (error) {
+      console.log(error);
+    }
   }
 </script>
