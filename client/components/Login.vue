@@ -11,7 +11,7 @@
         v-model:input="email"
         inputType="email"
         :autoFocus="true"
-        error=""
+        :error="errors && errors.email ? errors.email[0] : ''"
       />
     </div>
 
@@ -40,6 +40,7 @@
 </template>
 
 <script setup lang="ts">
+// IMPORT '$generalStore' FROM useNuxtApp(ALIASED INSIDE plugins/store)
   const { $userStore, $generalStore } = useNuxtApp()
 
   const email = ref('')
@@ -58,6 +59,7 @@
       $generalStore.isLoginOpen = false
     } catch (error) {
       console.log(error);
+      errors.value = error.response.data.errors
     }
   }
 </script>

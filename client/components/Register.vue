@@ -9,7 +9,7 @@
         v-model:input="name"
         inputType="text"
         :autoFocus="true"
-        error=""
+        :error="errors && errors.name ? errors.name[0] : ''"
       />
     </div>
 
@@ -19,7 +19,7 @@
         placeholder="Email Address"
         v-model:input="email"
         inputType="email"
-        error=""
+        :error="errors && errors.email ? errors.email[0] : ''"
       />
     </div>
 
@@ -29,7 +29,7 @@
         placeholder="Password"
         v-model:input="password"
         inputType="password"
-        error=""
+        :error="errors && errors.password ? errors.password[0] : ''"
       />
     </div>
 
@@ -39,7 +39,7 @@
         placeholder="Confirm Password"
         v-model:input="confirmPassword"
         inputType="password"
-        error=""
+        :error="errors && errors.passwordConfirmation ? errors.passwordConfirmation[0] : ''"
       />
     </div>
 
@@ -59,13 +59,29 @@
 </template>
 
 <script setup lang="ts">
+// IMPORT '$generalStore' FROM useNuxtApp(ALIASED INSIDE plugins/store)
+  const { $userStore, $generalStore } = useNuxtApp()
+
   const name = ref('')
   const email = ref('')
   const password = ref('')
   const confirmPassword = ref('')
   const errors = ref('')
 
-  const register = () => {
-    console.log('Register Henlo');
-  }
+  const register = async () => {
+    console.log('register function', name.value, email.value, password.value, confirmPassword.value);
+
+    errors.value = null
+
+    try {
+      await $userStore.getTokens()
+      await $userStore.register(name.value, email.value, password.value, confirmPassword.value)
+      await $userStore.getUser()
+
+      $generalStore.isLoginOpen = false
+    } catch (error) {
+      console.log(error);
+      errors.value = error.response.data.errors
+    }
+}
 </script>

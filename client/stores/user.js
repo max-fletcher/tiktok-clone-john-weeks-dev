@@ -17,24 +17,47 @@ export const useUsersStore = defineStore('user', {
       await $axios.get('/sanctum/csrf-cookie')
     },
 
+    async register(name, email, password, confirmPassword){
+      console.log('register info', name, email, password, confirmPassword);
+      let user = await $axios.post('register', {
+        name: name,
+        email: email,
+        password: password,
+        password_confirmation: confirmPassword,
+      })
+    },
+
     async login(email, password){
-      console.log('email & pass', email, password);
-      let user = await $axios.post('api/login', {
+      console.log('login info', email, password);
+      let user = await $axios.post('login', {
         email: email,
         password: password
       })
+    },
 
-      console.log('user login', user);
+    async logout(){
+      await $axios.post('/logout')
+      this.resetUser()
+    },
+
+    // Just a function so no need for async.
+    resetUser(){
+      this.$state.id = ''
+      this.$state.name = ''
+      this.$state.email = ''
+      this.$state.bio = ''
+      this.$state.image = ''
     },
 
     async getUser(){
       let res = await $axios.get('/api/logged-in-user')
 
-      this.$state.id = res.data[0].id
-      this.$state.name = res.data[0].name
-      this.$state.bio = res.data[0].bio
-      this.$state.image = res.data[0].image
-    }
+      this.$state.id = res.data.data.id
+      this.$state.name = res.data.data.name
+      this.$state.email = res.data.data.name
+      this.$state.bio = res.data.data.bio
+      this.$state.image = res.data.data.image
+    },
   },
   persist: true,
 })

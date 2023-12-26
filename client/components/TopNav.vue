@@ -18,7 +18,10 @@
 
       <!-- BUTTONS -->
       <div class="flex items-center justify-end gap-3 min-w-[275px] max-w-[320px] w-full">
-        <button class="flex items-center border rounded-sm px-3 py-[6px] hover:bg-gray-100">
+        <button 
+          @click="isLoggedIn"
+          class="flex items-center border rounded-sm px-3 py-[6px] hover:bg-gray-100"
+        >
           <Icon name="mdi:plus" color="#000000" size="22" />
           <span class="px-2 font-medium text-[15px]">Upload</span>
         </button>
@@ -26,7 +29,7 @@
         <div v-if="!$userStore.id" class="flex items-center">
           <button 
             @click="$generalStore.isLoginOpen = true" 
-            class="flex items-center bg-[#F02C56] text-white border rounded-md px-3 py-[6px]"
+            class="flex items-center bg-[#F02C56] text-white border rounded-md px-3 py-[6px]" 
           >
             <span class="mx-4 font-medium text-[15px]">Log In</span>
           </button>
@@ -39,14 +42,30 @@
           <!-- USER AVATAR & BUTTON WITH DROPDOWN ELEMENT -->
           <div class="relative">
             <button class="mt-1">
-              <img @click="showMenu = !showMenu" class="rounded-full" width="33" src="https://picsum.photos/id/83/300/320" alt="" />
+              <img 
+                @click="showMenu = !showMenu"
+                class="rounded-full" width="33"
+                :src="$userStore.image"
+              />
             </button>
-            <div v-if="showMenu" id="PopupMenu" class="absolute bg-white rounded-lg py-1.5 w-[200px] shadow-xl border top-[43px] -right-2">
-                <NuxtLink @click="$event => showMenu = false" class="flex items-center justify-start py-3 px-2 hover:bg-gray-100 cursor-pointer">
+
+            <div 
+              id="PopupMenu" 
+              v-if="showMenu" 
+              class="absolute bg-white rounded-lg py-1.5 w-[200px] shadow-xl border top-[43px] -right-2"
+            >
+                <NuxtLink 
+                  :to="`/profile/${$userStore.id}`"
+                  @click="showMenu = false"
+                  class="flex items-center justify-start py-3 px-2 hover:bg-gray-100 cursor-pointer"
+                >
                   <Icon name="ph:user" size="20" />
                   <span class="pl-2 font-semibold text-sm">Profile</span>
                 </NuxtLink>
-                <div class="flex items-center justify-start py-3 px-1.5 hover:bg-gray-100 cursor-pointer">
+                <div 
+                  @click="logout" 
+                  class="flex items-center justify-start py-3 px-1.5 hover:bg-gray-100 cursor-pointer"
+                >
                   <Icon name="ic:outline-login" size="20" />
                   <span class="pl-2 font-semibold text-sm">Log Out</span>
                 </div>
@@ -59,9 +78,42 @@
 </template>
 
 <script setup lang="ts">
+// IMPORT '$generalStore' FROM useNuxtApp(ALIASED INSIDE plugins/store)
+  const { $userStore, $generalStore } = useNuxtApp()
+
+  const { id, name } = storeToRefs($userStore)
+
   const route = useRoute()
+  const router = useRouter()
+
   let showMenu = ref(false)
 
-  // IMPORT '$generalStore' FROM useNuxtApp(ALIASED INSIDE plugins/store)
-  const { $userStore, $generalStore } = useNuxtApp()
+  // CLOSES THE MENU WHEN CLICKED OUTSIDE
+  onMounted(() => {
+    document.addEventListener('mouseup', function(e){
+      let popupMenu = document.getElementById('PopupMenu')
+      if(popupMenu && !popupMenu.contains(e.target)){
+        showMenu.value = false
+      }
+    });
+  })
+
+  const isLoggedIn = () => {
+    if($userStore.id){
+      // IF USER IS LOGGED IN ALREADY, GO TO UPLOAD PAGE. ELSE, OPEN LOGIN MODAL
+      router.push('/upload')
+    } else {
+      $generalStore.isLoginOpen = true
+    }
+  }
+
+  const logout = () => {
+    try {
+      showMenu.value = false
+      $userStore.logout()
+      router.push('/')
+    } catch (error) {
+      console.log(error);
+    }
+  }
 </script>
