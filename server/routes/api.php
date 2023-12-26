@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Controllers\api\v1\UserController;
 
 /*
@@ -18,17 +17,4 @@ use App\Http\Controllers\api\v1\UserController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/logged-in-user', [UserController::class, 'loggedInUser']);
-});
-
-
-Route::middleware(['guest'])->post('/login', function (LoginRequest $request) {
-    $request->authenticate();
-
-    $auth_token = $request->user()->createToken('Auth Token')->plainTextToken;
-
-    return response()->json([
-        'status' => 'success',
-        'auth_token' => $auth_token,
-    ])
-    ->withCookie('auth_token', $auth_token);
 });

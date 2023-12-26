@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// const auth_token_cookie = useCookie('auth_token')
+const auth_token_cookie = useCookie('auth_token')
 
 export default defineNuxtPlugin((NuxtApp) => {
 
@@ -14,17 +14,17 @@ export default defineNuxtPlugin((NuxtApp) => {
   axios.interceptors.request.use(
     (config) => {
       // USING LOCAL STORAGE TO STORE AUTH TOKEN. THIS WORKS IF WE SEND 'auth_token' IN RESPONSE BODY
-      let auth_token = localStorage.getItem('auth_token');
-      console.log('request_interceptor_auth_token', localStorage.getItem('auth_token'), auth_token);
+      // let auth_token = localStorage.getItem('auth_token');
+      // console.log('request_interceptor_auth_token', localStorage.getItem('auth_token'), auth_token);
 
       // NEEDS FIXING
       // USING COOKIE TO STORE AUTH TOKEN. THIS WORKS IF WE SEND 'auth_token' AS COOKIE FROM BACKEND
       // console.log(auth_token_cookie);
 
 
-      if(auth_token) {
-        config.headers['Authorization'] = `Bearer ${auth_token}`;
-      }
+      // if(auth_token) {
+      //   config.headers['Authorization'] = `Bearer ${auth_token}`;
+      // }
       return config;
     },
     (error) => {
@@ -34,9 +34,9 @@ export default defineNuxtPlugin((NuxtApp) => {
 
   axios.interceptors.response.use((response) => {
     // console.log('from interceptor', response);
-    if(response.data.auth_token)
-      localStorage.setItem('auth_token', response.data.auth_token)
-      console.log('auth_token_stored', localStorage.getItem('auth_token'))
+    // if(response.data.auth_token)
+    //   localStorage.setItem('auth_token', response.data.auth_token)
+      // console.log('auth_token_stored', localStorage.getItem('auth_token'))
 
     return response;
   }, function (error) {

@@ -51,9 +51,9 @@
     errors.value = null
 
     try {
-      $userStore.getTokens()
-      $userStore.login(email.value, password.value)
-      $userStore.getUser()
+      await $userStore.getTokens()
+      await $userStore.login(email.value, password.value)
+      await $userStore.getUser()
 
       $generalStore.isLoginOpen = false
     } catch (error) {

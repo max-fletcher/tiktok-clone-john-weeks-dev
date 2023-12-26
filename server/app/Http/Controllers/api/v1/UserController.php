@@ -12,7 +12,6 @@ class UserController extends Controller
     public function loggedInUser()
     {
         try {
-            // return response()->json('HERE', 500);
             $user = User::where('id', auth()->user()->id)->get();
             return response()->json(new UserResource($user), 200);
         } catch (\Exception $e) {
