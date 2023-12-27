@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api\v1;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Services\FileService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 
@@ -19,12 +20,27 @@ class UserController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function updateUserImage(Request $request)
     {
-        //
+        $request->validate([
+            'image' => ['required', 'mimes:png,jpg,jpeg']
+        ]);
+
+        if($request->height === '' || $request->width === '' || $request->top === '' || $request->left === ''){
+            return response()->json(['error' => 'THe dimensions are incomplete'], 400);
+        }
+
+        try {
+            $user = (new FileService)->updateImage(auth()->user(), $request);
+            $user->save();
+
+            return response()->json(['success' => 'OK'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
-    public function show(string $id)
+    public function getUser(string $id)
     {
         //
     }
