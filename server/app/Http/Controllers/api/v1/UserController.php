@@ -42,16 +42,33 @@ class UserController extends Controller
 
     public function getUser(string $id)
     {
-        //
+        try {
+            $user = User::findOrFail($id);
+
+            return response()->json([
+                'success' => 'OK',
+                'user' => $user
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
-    public function update(Request $request, string $id)
+    public function updateUser(Request $request, string $id)
     {
-        //
-    }
+        $validated = $request->validate([
+            'name' => 'required',
+            'bio' => 'nullable'
+        ]);
 
-    public function destroy(string $id)
-    {
-        //
+        try {
+            $user = User::findOrFail($id);
+
+            $user->update($validated);
+
+            return response()->json(['success' => 'OK'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 }

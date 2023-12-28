@@ -1,7 +1,5 @@
 import axios from 'axios'
 
-const auth_token_cookie = useCookie('auth_token')
-
 export default defineNuxtPlugin((NuxtApp) => {
 
   axios.defaults.withCredentials = true; //THIS IS TO FORCE AXIOS INSTANCES TO MAKE CROSS-SITE ACCESS-CONTROL REQUESTS WITH CREDENTIALS

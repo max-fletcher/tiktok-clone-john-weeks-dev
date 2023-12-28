@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\api\v1\PostController;
 use App\Http\Controllers\api\v1\UserController;
 
 /*
@@ -17,4 +18,14 @@ use App\Http\Controllers\api\v1\UserController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/logged-in-user', [UserController::class, 'loggedInUser']);
+
+
+
+    Route::post('/update-user-image/{id}', [UserController::class, 'updateUserImage']);
+    Route::get('/get-user/{id}', [UserController::class, 'getUser']);
+    Route::post('/update-user/{id}', [UserController::class, 'updateUser']);
+
+    Route::post('post/store', [PostController::class, 'store']);
+    Route::get('post/show/{id}', [PostController::class, 'show']);
+    Route::post('post/destroy/{id}', [PostController::class, 'destroy']);
 });

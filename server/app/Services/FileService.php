@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use Intervention\Image\Image;
+use Image;
 
 class FileService
 {
@@ -31,6 +31,17 @@ class FileService
         $name = time() . '.' . $extension;
         $image->save(public_path() . '/files/' . $name);
         $model->image = '/files/' . $name;
+
+        return $model;
+    }
+
+    public function addVideo($model, $request)
+    {
+        $video = $request->file('video');
+        $extension = $video->getClientOriginalExtension();
+        $name = time() . '.' . $extension;
+        $video->move(public_path() . '/files/' . $name);
+        $model->video = '/files/' . $name;
 
         return $model;
     }
