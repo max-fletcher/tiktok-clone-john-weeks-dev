@@ -40,8 +40,8 @@ class FileService
         $video = $request->file('video');
         $extension = $video->getClientOriginalExtension();
         $name = time() . '.' . $extension;
-        $video->move(public_path() . '/files/' . $name);
-        $model->video = '/files/' . $name;
+        $dir = $video->storeAs('files', $name, 'public_files');
+        $model->video =  $dir;
 
         return $model;
     }

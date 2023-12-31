@@ -60,7 +60,9 @@ export const useUsersStore = defineStore('user', {
     },
 
     async createPost(data){
-      return await $axios.post('/api/posts', data)
+      return await $axios.post('/api/posts', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
     },
   },
   persist: true,

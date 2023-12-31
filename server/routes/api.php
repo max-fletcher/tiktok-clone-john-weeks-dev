@@ -24,7 +24,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/logged-in-user', [UserController::class, 'loggedInUser']);
     Route::post('/update-user-image', [UserController::class, 'updateUserImage']);
     Route::get('/get-user/{id}', [UserController::class, 'getUser']);
-    Route::post('/update-user', [UserController::class, 'updateUser']);
+    Route::post('/update-user/{id}', [UserController::class, 'updateUser']);
 
     Route::post('posts', [PostController::class, 'store']);
     Route::get('posts/{id}', [PostController::class, 'show']);

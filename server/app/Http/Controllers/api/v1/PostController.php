@@ -13,7 +13,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'video' => ['required', 'file', 'mines:mp4'],
+            'video' => ['required', 'file', 'mimes:mp4'],
             'text' => ['required']
         ]);
 
@@ -23,6 +23,7 @@ class PostController extends Controller
 
             $post->user_id = auth()->user()->id;
             $post->text = $request->text;
+            $post->save();
 
             return response()->json(['success' => 'OK'], 200);
         } catch (\Exception $e) {

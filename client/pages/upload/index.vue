@@ -226,10 +226,18 @@
   const createVideo = async () => {
     errors.value = null
 
-    let data = new FormData()
+    let data = new FormData();
 
-    data.append('video', fileData.value || '')
-    data.append('text', caption.value || '')
+    data.append('video', fileData.value || null)
+    data.append('text', caption.value || null)
+
+    console.log(fileData.value);
+
+    // Display the key/value pairs
+    for (var d of data.entries()) {
+        console.log('key', d[0]);
+        console.log('value', d[1]);
+    }
 
     if(fileData.value && caption.value){
       isUploading.value = true
@@ -237,7 +245,10 @@
 
     try {
       // SUBMITTING FORMDATA USING A METHOD DEFINED IN user.js STORE
-      await $userStore.createPost(data)
+      let res = await $userStore.createPost(data)
+
+      console.log(res);
+
       if(res.status === 200){
         setTimeout(() => {
           // REDIRECT TO CURRENT USER'S PROFILE PAGE
@@ -245,12 +256,13 @@
           // SET TO FALSE TO STOP SHOWING UPLOADING STATUS
           isUploading.value = false
         }, 1000);
-
       }
     } catch (error) {
-      // CLEAR ERRORS
+      console.log('error', error);
+
+      // // CLEAR ERRORS
       errors.value = error.response.data.errors
-      // SET TO FALSE TO STOP SHOWING UPLOADING STATUS
+      // // SET TO FALSE TO STOP SHOWING UPLOADING STATUS
       isUploading.value = false
     }
   }
