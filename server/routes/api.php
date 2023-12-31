@@ -2,8 +2,12 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\api\v1\HomeController;
+use App\Http\Controllers\api\v1\LikeController;
 use App\Http\Controllers\api\v1\PostController;
 use App\Http\Controllers\api\v1\UserController;
+use App\Http\Controllers\api\v1\CommentController;
+use App\Http\Controllers\api\v1\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,14 +22,21 @@ use App\Http\Controllers\api\v1\UserController;
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/logged-in-user', [UserController::class, 'loggedInUser']);
-
-
-
-    Route::post('/update-user-image/{id}', [UserController::class, 'updateUserImage']);
+    Route::post('/update-user-image', [UserController::class, 'updateUserImage']);
     Route::get('/get-user/{id}', [UserController::class, 'getUser']);
-    Route::post('/update-user/{id}', [UserController::class, 'updateUser']);
+    Route::post('/update-user', [UserController::class, 'updateUser']);
 
-    Route::post('post/store', [PostController::class, 'store']);
-    Route::get('post/show/{id}', [PostController::class, 'show']);
-    Route::post('post/destroy/{id}', [PostController::class, 'destroy']);
+    Route::post('posts', [PostController::class, 'store']);
+    Route::get('posts/{id}', [PostController::class, 'show']);
+    Route::post('posts/{id}', [PostController::class, 'destroy']);
+
+    Route::get('profiles/{id}', [ProfileController::class, 'show']);
+
+    Route::post('comments', [CommentController::class, 'store']);
+    Route::post('comments/{id}', [CommentController::class, 'destroy']);
+
+    Route::post('likes', [LikeController::class, 'store']);
+    Route::post('likes/{id}', [LikeController::class, 'destroy']);
+
+    Route::get('home', [HomeController::class, 'index']);
 });
