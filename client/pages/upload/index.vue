@@ -5,6 +5,10 @@
 
       <UploadError :errorType="errorType" />
 
+      <div v-if="isUploading" class="fixed flex items-center justify-center top-0 left-0 w-full h-screen bg-black z-50 bg-opacity-50">
+        <Icon class="animate-spin ml-1" name="mingcute:loading-line" size="100" color="#FFFFFF" />
+      </div>
+
       <div>
         <div class="text-[23px] font-semibold">Upload video</div>
         <div class="text-gray-400 mt-1">Post a video to your account</div>
@@ -122,9 +126,19 @@
             <button @click="discard" class="px-10 py-2.5 mt-8 border text-[16px] hover:bg-gray-100 rounded-sm">
               Discard
             </button>
-            <button class="px-10 py-2.5 mt-8 border text-[16px] text-white bg-[#F02C56] rounded-sm">
+            <button @click="createVideo" class="px-10 py-2.5 mt-8 border text-[16px] text-white bg-[#F02C56] rounded-sm">
               Post
             </button>
+          </div>
+
+          <!-- FOR SHOWING FIELD VALIDATION ERRORS -->
+          <div v-if="errors" class="mt-4">
+            <div class="text-red-600" v-if="errors && errors.video">
+              {{ errors.video[0] }}
+            </div>
+            <div class="text-red-600" v-if="errors && errors.text">
+              {{ errors.text[0] }}
+            </div>
           </div>
         </div>
       </div>
@@ -134,6 +148,9 @@
 
 <script setup lang="ts">
   // import UploadLayout from '~/layouts/UploadLayout.vue'; // ANOTHER WAY TO DEFINE LAYOUT WITH IMPORT
+
+  const { $userStore } = useNuxtApp() // IMPORT STORES
+  const router = useRouter() // IMPORT ROUTER
 
   definePageMeta({
     // NOTICE THAT THE LAYOUT COMPONENT IS NAMED MainLayout BUT HERE WE ARE CALLING IT main-layout. THIS IS BECAUSE WE CAN'T USE UNDERSCORES AND CAPITALS HERE AND ANY CAMELCASE IS PARSED AS 
@@ -203,5 +220,38 @@
     file.value = null
     fileDisplay.value = null
     fileData.value = null
+  }
+
+  // FOR HITTING THE 'STORE' METHOD OF POSTS API
+  const createVideo = async () => {
+    errors.value = null
+
+    let data = new FormData()
+
+    data.append('video', fileData.value || '')
+    data.append('text', caption.value || '')
+
+    if(fileData.value && caption.value){
+      isUploading.value = true
+    }
+
+    try {
+      // SUBMITTING FORMDATA USING A METHOD DEFINED IN user.js STORE
+      await $userStore.createPost(data)
+      if(res.status === 200){
+        setTimeout(() => {
+          // REDIRECT TO CURRENT USER'S PROFILE PAGE
+          router.push('/profile/' + $userStore.id)
+          // SET TO FALSE TO STOP SHOWING UPLOADING STATUS
+          isUploading.value = false
+        }, 1000);
+
+      }
+    } catch (error) {
+      // CLEAR ERRORS
+      errors.value = error.response.data.errors
+      // SET TO FALSE TO STOP SHOWING UPLOADING STATUS
+      isUploading.value = false
+    }
   }
 </script>

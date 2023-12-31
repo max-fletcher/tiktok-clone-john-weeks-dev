@@ -3,7 +3,7 @@ import axios from '../plugins/axios' // import axios instance from axios.js.
 
 const $axios = axios().provide.axios //getting the axios instance provided by provider. See that file.
 
-// THE <-- persist: true --> IS USING NUXT_PINIA_PERSIST PACKAGE TO STORE THESE STORES AS COOKIES
+// THE <-- persist: true --> OPTION IS USING NUXT_PINIA_PERSIST PACKAGE TO STORE THESE STORES AS COOKIES
 export const useUsersStore = defineStore('user', {
   state: () => ({
     id : '',
@@ -57,6 +57,10 @@ export const useUsersStore = defineStore('user', {
       this.$state.email = res.data.data.name
       this.$state.bio = res.data.data.bio
       this.$state.image = res.data.data.image
+    },
+
+    async createPost(data){
+      return await $axios.post('/api/posts', data)
     },
   },
   persist: true,
