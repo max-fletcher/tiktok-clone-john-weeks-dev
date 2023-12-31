@@ -15,7 +15,7 @@ class ProfileController extends Controller
     {
         try {
             $posts = Post::where('user_id', $id)->orderBy('created_at', 'desc')->get();
-            $user = User::where('id', $id)->get();
+            $user = User::where('id', $id)->first();
 
             return response()->json([
                 'posts' => PostResource::collection($posts),

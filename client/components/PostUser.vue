@@ -1,5 +1,6 @@
 <template>
   <div
+    @click="displayPost(post)"
     @mouseenter="isHover(true)"
     @mouseleave="isHover(false)"
     class="relative brightness-90 hover:brightness-[1.1] cursor-pointer"
@@ -99,6 +100,10 @@
     video.value.currentTime = 0
     video.value.src = ''
   })
+
+  const displayPost = (post) => {
+    
+  }
 
   const isHover = (bool) => {
     if(bool){
