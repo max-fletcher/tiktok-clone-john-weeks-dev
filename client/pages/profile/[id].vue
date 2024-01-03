@@ -69,8 +69,7 @@
   // IMPORT '$userStore', '$profileStore', '$generalStore' FROM useNuxtApp(ALIASED INSIDE plugins/store)
   const { $userStore, $profileStore, $generalStore } = useNuxtApp()
   const { posts } = storeToRefs($profileStore) // CONVERTING '$profileStore' TO REF
-
-  const { route } = useRoute()
+  const route = useRoute()
 
   definePageMeta({
     // NOTICE THAT THE LAYOUT COMPONENT IS NAMED MainLayout BUT HERE WE ARE CALLING IT main-layout. THIS IS BECAUSE WE CAN'T USE UNDERSCORES AND CAPITALS HERE AND ANY CAMELCASE IS PARSED AS 
@@ -87,6 +86,7 @@
       console.log(error);
     }
   })
+
 
   watch(() => posts.value, () => {
     setTimeout(() => show.value = true, 300)

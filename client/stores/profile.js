@@ -19,7 +19,7 @@ export const useProfileStore = defineStore('profile', {
       this.resetUser()
       let res = await $axios.get(`/api/profiles/${id}`)
 
-      this.state.id = res.data.user.id
+      this.$state.id = res.data.user.id
       this.$state.name = res.data.user.name
       this.$state.bio = res.data.user.bio
       this.$state.image = res.data.user.image
