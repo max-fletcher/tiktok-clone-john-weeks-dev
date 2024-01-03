@@ -6,6 +6,7 @@ use App\Http\Controllers\api\v1\HomeController;
 use App\Http\Controllers\api\v1\LikeController;
 use App\Http\Controllers\api\v1\PostController;
 use App\Http\Controllers\api\v1\UserController;
+use App\Http\Controllers\api\v1\GlobalController;
 use App\Http\Controllers\api\v1\CommentController;
 use App\Http\Controllers\api\v1\ProfileController;
 
@@ -19,6 +20,8 @@ use App\Http\Controllers\api\v1\ProfileController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::get('home', [HomeController::class, 'index']);
+Route::get('/get-random-users', [GlobalController::class, 'getRandomUsers']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/logged-in-user', [UserController::class, 'loggedInUser']);
@@ -37,6 +40,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('likes', [LikeController::class, 'store']);
     Route::post('likes/{id}', [LikeController::class, 'destroy']);
-
-    Route::get('home', [HomeController::class, 'index']);
 });

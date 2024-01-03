@@ -15,8 +15,14 @@
 
       <div class="lg:hidden block pt-3" />
 
-      <div class="cursor-pointer">
-        <MenuItemFollow />
+      <div
+        v-if="$generalStore.suggested"
+        v-for="(sug, index) in $generalStore.suggested"
+        :key="index"
+      >
+        <div @click="isLoggedIn(sug)" class="cursor-pointer">
+          <MenuItemFollow :user="sug" />
+        </div>
       </div>
 
       <button class="lg:block hidden text-[#F02C56] pt-1.5 pl-2 text-[13px]">
@@ -31,8 +37,14 @@
 
       <div class="lg:hidden block pt-3" />
 
-      <div class="cursor-pointer">
-        <MenuItemFollow />
+      <div
+        v-if="$generalStore.following"
+        v-for="(fol, index) in $generalStore.following"
+        :key="index"
+      >
+        <div @click="isLoggedIn(fol)" class="cursor-pointer">
+          <MenuItemFollow :user="fol" />
+        </div>
       </div>
 
       <button class="lg:block hidden text-[#F02C56] pt-1.5 pl-2 text-[13px]">
@@ -53,5 +65,15 @@
 </template>
 
 <script setup lang="ts">
+  const { $generalStore, $userStore } = useNuxtApp()
   const route = useRoute()
+  const router = useRouter()
+
+  const isLoggedIn = (fol) => {
+    if(!$userStore.id){
+      $generalStore.isLoginOpen = true //OPEN LOGIN MODAL IF USER IS NOT LOGGED IN
+      return
+    }
+    setTimeout(() => router.push(`/profile/${fol.id}`), 300)
+  }
 </script>

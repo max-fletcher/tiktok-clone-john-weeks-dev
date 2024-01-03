@@ -13,8 +13,8 @@ export const useGeneralStore = defineStore('general', {
     ids : '',
     isBackUrl: '',
     posts: '',
-    suggested: '',
-    following: '',
+    suggested: [],
+    following: [],
   }),
   actions: {
     // THIS IS TO PREVENT SCROLLING WHEN THE MODALS ARE OPEN. ALSO SEE app.vue onMounted FOR THE REST OF THE FUNCTIONAL CODE
@@ -65,11 +65,11 @@ export const useGeneralStore = defineStore('general', {
     async getRandomUsers(type){
       let res = await $axios.get('/api/get-random-users')
 
-      if(type === suggested){
+      if(type === 'suggested'){
         this.suggested = res.data.suggested
       }
 
-      if(type === following){
+      if(type === 'following'){
         this.following = res.data.following
       }
     }

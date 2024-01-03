@@ -9,7 +9,7 @@ use App\Http\Resources\UserResource;
 
 class GlobalController extends Controller
 {
-    public function getRandomUser()
+    public function getRandomUsers()
     {
         try {
             $suggested = User::inRandomOrder()->limit(5)->get();
