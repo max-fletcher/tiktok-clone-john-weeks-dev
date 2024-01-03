@@ -49,8 +49,29 @@ export const useGeneralStore = defineStore('general', {
       })
     },
 
-    allLowerCaseNoCaps(str) {
+    allLowerCaseNoCaps(str){
       return str.split(' ').join('').toLowerCase()
+    },
+
+    updateSideMenuImage(sug, user){
+      for (let i = 0; i < sug.length; i++){
+        const res = sug[i]
+        if(res.id === user.id){
+          res.image = user.image
+        }
+      }
+    },
+
+    async getRandomUsers(type){
+      let res = await $axios.get('/api/get-random-users')
+
+      if(type === suggested){
+        this.suggested = res.data.suggested
+      }
+
+      if(type === following){
+        this.following = res.data.following
+      }
     }
   },
   persist: true,

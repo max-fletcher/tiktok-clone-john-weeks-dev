@@ -32,7 +32,7 @@
                     WHICH IS THE ID OF THE INPUT TAG SO IT OPENS UP WHEN THE LABEL IS CLICKED -->
               <label for="image" class="relative cursor-pointer">
                 <img 
-                  src="https://picsum.photos/id/8/300/320" 
+                  :src="userImage" 
                   width="95" 
                   class="rounded-full" 
                 />
@@ -104,9 +104,35 @@
         </div>
 
         <div class="absolute p-5 left-0 bottom-0 border-t border-t-gray-300 w-full">
-          <div v-if="!uploadedImage" id="UpdateInfoButtons" class="flex items-center justify-end">
+          <div 
+            v-if="!uploadedImage" 
+            id="UpdateInfoButtons" 
+            class="flex items-center justify-end"
+          >
             <button 
               @click="$generalStore.isEditProfileOpen = false"
+              class="flex items-center border rounded-sm px-3 py-[6px] hover:bg-gray-100"
+            >
+              <span class="px-2 font-medium text-[15px]">Cancel</span>
+            </button>
+
+            <button 
+                :disabled="!isUpdated"
+                @click="updateUserInfo()"
+                :class="!isUpdated ? 'bg-gray-200' : 'bg-[#F02C56]'"
+                class="flex items-center bg-[#F02C56] text-white border rounded-md ml-3 px-3 py-[6px]"
+            >
+                <span class="mx-4 font-medium text-[15px]">Apply</span>
+            </button>
+          </div>
+
+          <div 
+            v-else 
+            id="CropperButtons" 
+            class="flex items-center justify-end"
+          >
+            <button 
+              @click="uploadedImage = null"
               class="flex items-center border rounded-sm px-3 py-[6px] hover:bg-gray-100"
             >
               <span class="px-2 font-medium text-[15px]">Cancel</span>
@@ -136,12 +162,13 @@
 
   const { $userStore, $generalStore, $profileStore } = useNuxtApp()
   const { name, bio, image } = storeToRefs($userStore)
+  const route = useRoute()
 
   // MAKING A COPY OF THE REFS SO THAT WE CAN FREELY EDIT THESE VALUES IN INPUT V-MODEL WITHOUT EDITING THE ACTUAL VALUES IN STORE STATE(SINCE IT IS USED TO POPULATE THE MODAL AND PAGE COMPONENTS
   onMounted(() => {
-    userImage = image
-    userName = name
-    userBio = bio
+    userName.value = name.value
+    userBio.value = bio.value
+    userImage.value = image.value
   })
 
   let file = ref(null)
@@ -159,6 +186,49 @@
     uploadedImage.value = URL.createObjectURL(file.value) //CREATE A URL FROM THE FILE
   }
 
+  const cropAndUpdateImage = async () => {
+      const { coordinates } = cropper.value.getResult()
+
+      let data = new FormData()
+
+      data.append('image', file.value || '')
+      data.append('width', coordinates.width || '')
+      data.append('height', coordinates.height || '')
+      data.append('top', coordinates.top || '')
+      data.append('left', coordinates.left || '')
+
+    try {
+        await $userStore.updateUserImage(data)
+        await $userStore.getUser()
+        await $profileStore.getProfile(route.params.id)
+
+        $generalStore.updateSideMenuImage($generalStore.suggested, $userStore)
+        $generalStore.updateSideMenuImage($generalStore.following, $userStore)
+
+        userImage.value = image.value
+        uploadedImage.value = null
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+  const updateUserInfo = async () => {
+    try {
+      await $userStore.updateUser(userName.value, userBio.value)
+      await $userStore.getUser()
+      await $profileStore.getProfile(route.params.id)
+
+      userName.value = name.value
+      userBio.value = bio.value
+
+      setTimeout(() => {
+        $generalStore.isEditProfileOpen = false
+      }, 100)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // VALIDATION FOR THE 2 TEXT FIELDS. IF THE COPIED VALUE MATCHES THE 
   watch(() => userName.value, () => {
     if(!userName.value || userName.value === name.value)
@@ -168,7 +238,7 @@
   })
 
   watch(() => userBio.value, () => {
-    if(!userBio.value || userBio.value.length < 1)
+    if(!userName.value || userBio.value.length < 1)
       isUpdated.value = false
     else
       isUpdated.value = true

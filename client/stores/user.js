@@ -64,6 +64,20 @@ export const useUsersStore = defineStore('user', {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
     },
+
+    async updateUserImage(data){
+      return await $axios.post('/api/update-user-image', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+    },
+
+    async updateUser(name, bio){
+      return await $axios.post(`/api/update-user/${this.$state.id}`, {
+        name: name, bio: bio
+      }, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+    },
   },
   persist: true,
 })

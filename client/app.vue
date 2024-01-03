@@ -26,6 +26,8 @@
   // WORKS LIKE A MIDDLEWARE. WHENEVER A PAGE IS LOADED, THIS CHECKS IF SESSION HAS EXPIRED OR NOT USING INTERCEPTORS WHENEVER A REQUEST TO THE SERVER(USING AXIOS) IS MADE
     try {
       await $generalStore.hasSessionExpired()
+      await $generalStore.getRandomUsers('suggested')
+      await $generalStore.getRandomUsers('following')
 
       if($userStore.id){
         $userStore.getUser()
