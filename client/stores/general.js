@@ -53,6 +53,10 @@ export const useGeneralStore = defineStore('general', {
       return str.split(' ').join('').toLowerCase()
     },
 
+    setBackUrl(url) {
+      this.isBackUrl = url
+    },
+
     async getRandomUsers(type){
       let res = await $axios.get('/api/get-random-users')
 
@@ -63,14 +67,11 @@ export const useGeneralStore = defineStore('general', {
       if(type === 'following'){
         this.following = res.data.following
       }
-
-      console.log('getRandomUsers', res);
     },
 
     async getAllUsersAndPosts(){
       let res = await $axios.get('/api/home')
       this.posts = res.data
-      console.log('getAllUsersAndPosts', res.data, this.posts, res);
     },
 
     updateSideMenuImage(sug, user){
