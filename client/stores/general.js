@@ -12,7 +12,7 @@ export const useGeneralStore = defineStore('general', {
     selectedPost : '',
     ids : '',
     isBackUrl: '',
-    posts: '',
+    posts: [],
     suggested: [],
     following: [],
   }),
@@ -53,15 +53,6 @@ export const useGeneralStore = defineStore('general', {
       return str.split(' ').join('').toLowerCase()
     },
 
-    updateSideMenuImage(sug, user){
-      for (let i = 0; i < sug.length; i++){
-        const res = sug[i]
-        if(res.id === user.id){
-          res.image = user.image
-        }
-      }
-    },
-
     async getRandomUsers(type){
       let res = await $axios.get('/api/get-random-users')
 
@@ -72,7 +63,24 @@ export const useGeneralStore = defineStore('general', {
       if(type === 'following'){
         this.following = res.data.following
       }
-    }
+
+      console.log('getRandomUsers', res);
+    },
+
+    async getAllUsersAndPosts(){
+      let res = await $axios.get('/api/home')
+      this.posts = res.data
+      console.log('getAllUsersAndPosts', res.data, this.posts, res);
+    },
+
+    updateSideMenuImage(sug, user){
+      for (let i = 0; i < sug.length; i++){
+        const res = sug[i]
+        if(res.id === user.id){
+          res.image = user.image
+        }
+      }
+    },
   },
   persist: true,
 })

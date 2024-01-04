@@ -12,9 +12,9 @@ class HomeController extends Controller
     public function index()
     {
         try {
-            $posts = Post::orderBy('created_by', 'desc')->get();
+            $posts = Post::orderBy('created_at', 'desc')->get();
 
-            return response()->json(new PostResource($posts), 200);
+            return response()->json(PostResource::collection($posts), 200);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
