@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from '../plugins/axios' // import axios instance from axios.js.
+import { useGeneralStore } from './general'
 
 const $axios = axios().provide.axios //getting the axios instance provided by provider. See that file.
 
@@ -65,6 +66,32 @@ export const useUsersStore = defineStore('user', {
       })
     },
 
+    async likePost(post, isPostPage){
+      let res = await $axios.post(`/api/like`, {
+        post_id: post.id,
+      }, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+
+      console.log(res);
+
+      let singlePost = null
+
+      // IF POST PAGE IS GIVEN(OF TYPE TRUE OR ANY), ASSIGN THE POST TO "singlePost" ELSE, FIND THE POST FROM GENERAL STORE "posts" STATE AND ASSIGN
+      // ELSE IS IF THE FUNCTION IS CALLED FROM THE MAIN PAGE.
+      if(isPostPage){
+        singlePost = post
+      }
+      else{
+        singlePost = useGeneralStore().posts.find(p => p.id === post.id)
+      }
+
+      console.log(singlePost);
+
+      // PUSH THE LIKE INTO STORE
+      singlePost.likes.push(res.data.like)
+    },
+
     async updateUserImage(data){
       return await $axios.post('/api/update-user-image', data, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -78,6 +105,7 @@ export const useUsersStore = defineStore('user', {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
     },
+
   },
   persist: true,
 })

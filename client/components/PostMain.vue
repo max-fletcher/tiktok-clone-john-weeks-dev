@@ -49,10 +49,13 @@
         <div class="relative mr-[75px]">
           <div class="absolute bottom-0 pl-2">
             <div class="pb-4 text-center">
-              <button class="rounded-full bg-gray-200 p-2 cursor-pointer">
-                <Icon name="mdi:heart" size="25" />
+              <button 
+                @click="isLiked ? unlikePost(post) : likePost(post)"
+                class="rounded-full bg-gray-200 p-2 cursor-pointer"
+              >
+                <Icon name="mdi:heart" size="25" :color="isLiked ? '#F02C56' : ''" />
               </button>
-              <span class="text-xs text-gray-800 font-semibold">34</span>
+              <span class="text-xs text-gray-800 font-semibold">{{ post.likes.length }}</span>
             </div>
 
             <div class="pb-4 text-center">
@@ -105,6 +108,33 @@
     video.value.currentTime = 0
     video.value.src = ''
   })
+
+  // A COMPUTED PROPERTY SO THAT THE COMPONENT IS NOT RE-RENDERED WITH EVERY CHANGE THAT HAPPENS. IN THIS SCENARIO, IF "res" CHANGES, 
+  // THEN THE VALUE OF "isLiked"(BOOLEAN) CHANGES AND TRIGGERS RE-RENDER. OTHERWISE, THIS WILL RE-RENDER WITH EVERY PAGE LOAD/PARENT OR SIBLING
+  // RE-RENDER BECAUSE THE "find" FUNCTION WILL BE RAN EVERYTIME.
+  const isLiked = computed(() => {
+    // FETCH LIKE OBJECT NESTED INSIDE POST, IF IT EXISTS.
+    let res = post.value.likes.find((like) => like.user_id === $userStore.id)
+    // IS 
+    if(res){
+      return true
+    }
+    return false
+  })
+
+  const likePost = async (post) => {
+    // IF USER IS NOT LOGGED IN, OPEN THE LOGIN MODAL AND STOP THE REST OF THE FUNCTION EXECUTING(I.E PREMATURE RETURN)
+    if(!$userStore.id){
+      $generalStore.isLoginOpen = true
+      return
+    }
+
+    try {
+      await $userStore.likePost(post)
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const isLoggedIn = (user) => {
     if(!$userStore.id){
