@@ -136,6 +136,20 @@
     }
   }
 
+  const unlikePost = async (post) => {
+    // IF USER IS NOT LOGGED IN, OPEN THE LOGIN MODAL AND STOP THE REST OF THE FUNCTION EXECUTING(I.E PREMATURE RETURN)
+    if(!$userStore.id){
+      $generalStore.isLoginOpen = true
+      return
+    }
+
+    try {
+      await $userStore.unlikePost(post)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const isLoggedIn = (user) => {
     if(!$userStore.id){
       $generalStore.isLoginOpen = true //OPEN LOGIN MODAL IF USER IS NOT LOGGED IN

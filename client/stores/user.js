@@ -92,6 +92,36 @@ export const useUsersStore = defineStore('user', {
       singlePost.likes.push(res.data.like)
     },
 
+    async unlikePost(post, isPostPage){
+      let deleteLike = null
+      let singlePost = null
+
+      // IF POST PAGE IS GIVEN(OF TYPE TRUE OR ANY), ASSIGN THE POST TO "singlePost" ELSE, FIND THE POST FROM GENERAL STORE "posts" STATE AND ASSIGN
+      // ELSE IS IF THE FUNCTION IS CALLED FROM THE MAIN PAGE.
+      if(isPostPage){
+        singlePost = post
+      }
+      else{
+        singlePost = useGeneralStore().posts.find(p => p.id === post.id)
+      }
+
+      singlePost.likes.forEach(like => {
+        if(like.user_id === this.id){
+          deleteLike = like
+        }
+      })
+
+      let res = await $axios.delete(`/api/like/${deleteLike.id}`)
+
+      // REMOVE THE LIKE FROM INSIDE THE POST
+      for (let i = 0; i < singlePost.likes.length; i++) {
+        const like = singlePost.likes[i];
+        if(like.id === res.data.like.id){
+          singlePost.likes.splice(i, 1)
+        }
+      }
+    },
+
     async updateUserImage(data){
       return await $axios.post('/api/update-user-image', data, {
         headers: { 'Content-Type': 'multipart/form-data' },
