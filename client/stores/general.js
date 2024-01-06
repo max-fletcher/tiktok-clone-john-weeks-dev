@@ -57,6 +57,15 @@ export const useGeneralStore = defineStore('general', {
       this.isBackUrl = url
     },
 
+    async getPostById(id){
+      let res = await $axios.get(`/api/posts/${id}`)
+
+      console.log(res);
+
+      this.$state.selectedPost = res.data.post
+      this.$state.ids = res.data.ids
+    },
+
     async getRandomUsers(type){
       let res = await $axios.get('/api/get-random-users')
 

@@ -80,6 +80,7 @@
 
 <script setup lang="ts">
   const { $generalStore, $userStore } = useNuxtApp()
+  const router = useRouter()
   const props = defineProps(['post'])
   const { post } = toRefs(props)
 
@@ -110,8 +111,8 @@
   })
 
   // A COMPUTED PROPERTY SO THAT THE COMPONENT IS NOT RE-RENDERED WITH EVERY CHANGE THAT HAPPENS. IN THIS SCENARIO, IF "res" CHANGES, 
-  // THEN THE VALUE OF "isLiked"(BOOLEAN) CHANGES AND TRIGGERS RE-RENDER. OTHERWISE, THIS WILL RE-RENDER WITH EVERY PAGE LOAD/PARENT OR SIBLING
-  // RE-RENDER BECAUSE THE "find" FUNCTION WILL BE RAN EVERYTIME.
+  // THEN THE VALUE OF "isLiked"(BOOLEAN) CHANGES AND TRIGGERS RE-RENDER. OTHERWISE, IF WE USED A FUNCTION, THIS WILL 
+  // RE-RENDER WITH EVERY PAGE LOAD/PARENT OR SIBLING RE-RENDER BECAUSE THE "find" FUNCTION WILL BE RAN EVERYTIME.
   const isLiked = computed(() => {
     // FETCH LIKE OBJECT NESTED INSIDE POST, IF IT EXISTS.
     let res = post.value.likes.find((like) => like.user_id === $userStore.id)

@@ -1,14 +1,18 @@
 <template>
   <div id="PostPage" class="fixed lg:flex justify-between z-50 top-0 left-0 w-full h-full bg-black lg:overflow-hidden overflow-auto">
-    <div class="lg:w-[calc(100%-540px)] h-full relative">
+    <div 
+      v-if="$generalStore.selectedPost"
+      class="lg:w-[calc(100%-540px)] h-full relative"
+    >
       <NuxtLink 
         class="absolute z-20 m-5 rounded-full bg-gray-700 p-1.5 hover:bg-gray-800" 
-        to="/"
+        :to="$generalStore.isBackUrl"
       >
         <Icon name="material-symbols:close" color="#FFFFFF" size="27" />
       </NuxtLink>
 
-      <div v-if="true">
+      <!-- "v-if" WILL SHOW ONLY WHEN THERE ARE MULTIPLE POSTS I.E GREATER THAN 1 -->
+      <div v-if="$generalStore.ids.length > 1">
         <button
           :disabled="!isLoaded"
           @click="loopThroughPostsUp"
@@ -32,10 +36,11 @@
         src="~/assets/images/tiktok-logo-small.png"
       />
 
+      <!-- THIS SERVES AS A STATIC BLURRED BACKGROUND AND NOTHING MORE -->
       <video
-        v-if="true"
+        v-if="$generalStore.selectedPost.video"
         class="absolute object-cover w-full my-auto z-[-1] h-screen"
-        src="/cowe.mp4"
+        :src="$generalStore.selectedPost.video"
       />
 
       <div 
@@ -46,46 +51,48 @@
       </div>
       <div class="bg-black bg-opacity-70 lg:min-w-[480px]">
         <video
-        v-if="true"
-        ref="video"
-        loop
-        muted
-        class="h-screen mx-auto"
-        src="/cowe.mp4"
-      />
+          v-if="$generalStore.selectedPost.video"
+          ref="video"
+          loop
+          muted
+          class="h-screen mx-auto"
+          :src="$generalStore.selectedPost.video"
+        />
       </div>
     </div>
 
     <div 
+      v-if="$generalStore.selectedPost"
       id="InfoSection"
-      v-if="true"
       class="lg:max-w-[550px] relative w-full h-full bg-white"
     >
       <div class="py-7" />
 
       <div class="flex items-center justify-between px-8">
         <div class="flex items-center">
-          <NuxtLink to="/">
+          <!-- NOTICE THE BACKTICK INSIDE THE DOUBLE QUOTE. THIS IS HOW YOU HANDLE BACKTICKS INSIDE BINDING PROPERTIES INSIDE VUE -->
+          <NuxtLink :to="`/profile/${$generalStore.selectedPost.user.id}`">
             <img 
               class="rounded-full lg:mx-0 mx-auto"
               width="40"
-              src="https://picsum.photos/id/8/300/320"
+              :src="$generalStore.selectedPost.user.image"
             />
           </NuxtLink>
           <div class="ml-3 pt-0.5">
             <div class="text-[17px] font-semibold">
-              User Name
+              {{ $generalStore.allLowerCaseNoCaps($generalStore.selectedPost.user.name) }}
             </div>
             <div class="text-[13px] -mt-5 font-light">
-              User Name
+              {{ $generalStore.selectedPost.user.name }}
               <span class="relative -top-[2px] text-[30px] pr-0.5">.</span>
-              <span class="font-medium">Data Here</span>
+              <span class="font-medium">{{ $generalStore.selectedPost.created_at }}</span>
             </div>
           </div>
         </div>
 
+        <!-- "v-if" CAUSES THIS DELETE BUTTON TO ONLY SHOW IF THE POST USER ID MATCHES LOGGED IN USER ID, I.E THIS POST BELONGS TO THE LOGGED IN USER -->
         <Icon 
-          v-if="true"
+          v-if="$userStore.id === $generalStore.selectedPost.user.id"
           @click="deletePost()"
           name="material-symbols:delete-outline-sharp"
           size="25"
@@ -93,20 +100,27 @@
         />
       </div>
 
-      <div class="px-8 mt-4 text-sm">This is post text</div>
+      <div class="px-8 mt-4 text-sm">{{ $generalStore.selectedPost.text }}</div>
 
       <div class="px-8 mt-4 text-sm font-bold">
         <Icon name="mdi:music" size="17" />
-        original sound - User Name
+        original sound - {{ $generalStore.allLowerCaseNoCaps($generalStore.selectedPost.user.name) }}
       </div>
 
       <div class="flex items-center px-8 mt-8">
         <div class="pb-4 text-center flex items-center">
-          <button class="rounded-full bg-gray-200 p-2 cursor-pointer">
-            <Icon name="mdi:heart" size="25" />
+          <button 
+            @click="isLiked ? unlikePost : likePost"
+            class="rounded-full bg-gray-200 p-2 cursor-pointer"
+          >
+            <Icon 
+              name="mdi:heart" 
+              size="25" 
+              :color="isLiked ? '#F02C56' : ''"
+            />
           </button>
           <span class="text-xs pl-2 pr-4 text-gray-800 font-semibold">
-            1,123
+            {{ $generalStore.selectedPost.likes.length }}
           </span>
         </div>
 
@@ -124,7 +138,7 @@
         <div class="pt-2" />
 
         <div
-          v-if="false"
+          v-if="$generalStore.selectedPost.comments.length < 1"
           class="text-center mt-6 text-xl text-gray-500"
         >
           No comments...
@@ -132,37 +146,44 @@
 
         <div
           v-else
+          v-for="(comment, index) in $generalStore.selectedPost.comments"
+          :key="index"
           class="flex items-center justify-center px-8 mt-4"
         >
           <div class="flex items-center relative w-full">
-            <NuxtLink to="/">
+            <NuxtLink :to="`/profile/${comment.user.id}`">
               <img
-                src="https://picsum.photos/id/8/300/320"
+                :src="comment.user.image"
                 width="40"
                 class="absolute top-0 rounded-full lg:mx-0 mx-auto"
               />
             </NuxtLink>
             <div class="ml-14 pt-0.5 w-full">
               <div class="text-[18px] font-semibold flex items-center justify-between">
-                User name
+                {{ comment.user.name }}
+                <!-- ONLY IF LOGGED IN USER IS THE ONE WHO MADE THIS COMMENT, SHOW THIS BUTTON -->
                 <Icon 
-                  v-if="true"
-                  @click="deleteComment()"
+                  v-if="comment.user.id === $userStore.id"
+                  @click="deleteComment($generalStore.selectedPost, comment.id)"
                   name="material-symbols:delete-outline-sharp"
                   size="25" 
                   class="cursor-pointer"
                 />
               </div>
               <div class="text-[15px] font-light">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus cupiditate autem quo nemo nostrum cumque corporis! Pariatur, blanditiis consequuntur, fugit aspernatur 
-                alias magnam fuga dignissimos adipisci, minus nisi voluptate ipsa fugiat iusto voluptates. Itaque fuga consectetur odio dicta quibusdam ipsam.
+                {{ comment.text }}
               </div>
             </div>
           </div>
         </div>
         <div class="mb-28" />
       </div>
-      <div v-if="true" id="CreateComment" class="absolute flex items-center justify-center bottom-0 bg-white h-[85px] lg:max-w-[550px] w-full py-5 px-8 border-t-2">
+      <!-- v-if="$userStore.id" MEANS IF USER IS LOGGED IN -->
+      <div 
+        v-if="$userStore.id" 
+        id="CreateComment" 
+        class="absolute flex items-center justify-center bottom-0 bg-white h-[85px] lg:max-w-[550px] w-full py-5 px-8 border-t-2"
+      >
         <div :class="inputFocused ? 'border-2 border-gray-400' : 'border-2 border-[#F1F1F2]'" class="bg-[#F1F1F2] flex items-center rounded-lg w-full lg-max-w-[420px]">
           <input 
             v-model="comment"
@@ -187,6 +208,8 @@
 </template>
 
 <script setup lang="ts">
+  const { $generalStore, $userStore, $profileStore } = useNuxtApp()
+
   const route = useRoute()
   const router = useRouter()
 
@@ -195,20 +218,33 @@
   let comment = ref(null)
   let inputFocused = ref(false)
 
-  onMounted(() => {
-    isLoaded.value = true
-    video.value.play()
-    // IF THE VIDEO VARIABLE IS NOT EMPTY, APPEND AN EVENT LISTENER TO THE VIDEO VARIABLE 'video'. THE TERM 'loadeddata' IS A CASE-SENSITIVE RESERVED KEYWORD THAT TELLS THE
-    // EVENT-LISTENER TO DO SOMETHING IN RESPONSE TO WHEN DATA IS FINISHED LOADING FOR, SAY, A VIDEO TAG.
+  onMounted(async () => {
+    $generalStore.selectedPost = null
+    try {
+      await $generalStore.getPostById(route.params.id)
+    } catch (error) {
+      if(error && error.response.status === 400){
+        router.push('/')
+      }
+    }
+
+    // isLoaded.value = true
+    // video.value.play()
+
+    // IF THE VIDEO VARIABLE IS NOT EMPTY, APPEND AN EVENT LISTENER TO THE VIDEO VARIABLE 'video'. THE TERM 'loadeddata' IS A CASE-SENSITIVE RESERVED
+    // KEYWORD THAT TELLS THE EVENT-LISTENER TO DO SOMETHING IN RESPONSE TO WHEN DATA IS FINISHED LOADING FOR, SAY, A VIDEO TAG.
     // if(video.value) {
-    //   video.value.addEventListener('loadeddata', (e) => {
-    //     if(e.target){
-    //       // SET 'isLoaded' VALUE TO true AFTER 200ms OF WHEN DATA IS FINISHED LOADING(I.E FINISHED LOADING IN VIDEO TAG)
-    //       setTimeout(() => {
-    //         isLoaded.value = true
-    //       }, 500)
-    //     }
-    //   })
+      // console.log('Entered if');
+      video.value.addEventListener('loadeddata', (e) => {
+        console.log('Entered event listener', e, e.target);
+        if(e.target){
+          console.log('Entered 2nd if');
+          // SET 'isLoaded' VALUE TO true AFTER 200ms OF WHEN DATA IS FINISHED LOADING(I.E FINISHED LOADING IN VIDEO TAG)
+          setTimeout(() => {
+            isLoaded.value = true
+          }, 500)
+        }
+      })
     // }
   })
 
@@ -222,8 +258,24 @@
   // IT IS IMPERATIVE THAT YOU PASS IN 'isLoaded' AS AN ARGUMENT TO THE FUNCTION WHICH IS USED AS THE 2nd PARAM OF THE WATCH FUNCTION. ELSE THIS WON'T WORK BECAUSE THE IF CONDITION WILL FAIL EVERY TIME.
   watch(() => isLoaded.value, () => {
     if(isLoaded.value){
-      setTimeout(() => video.value.play(), 500)
+      setTimeout(() => {
+        console.log('video inside setTimeOut', video.value);
+        video.value.play()
+      }, 500)
     }
+  })
+
+  // A COMPUTED PROPERTY SO THAT THE COMPONENT IS NOT RE-RENDERED WITH EVERY CHANGE THAT HAPPENS. IN THIS SCENARIO, IF "res" CHANGES, 
+  // THEN THE VALUE OF "isLiked"(BOOLEAN) CHANGES AND TRIGGERS RE-RENDER. OTHERWISE, IF WE USED A FUNCTION, THIS WILL 
+  // RE-RENDER WITH EVERY PAGE LOAD/PARENT OR SIBLING RE-RENDER BECAUSE THE "find" FUNCTION WILL BE RAN EVERYTIME.
+  const isLiked = computed(() => {
+    // FETCH LIKE OBJECT NESTED INSIDE POST, IF IT EXISTS.
+    let res = $generalStore.selectedPost.likes.find((like) => like.user_id === $userStore.id)
+    // IS 
+    if(res){
+      return true
+    }
+    return false
   })
 
 </script>
