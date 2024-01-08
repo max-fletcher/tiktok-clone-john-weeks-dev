@@ -110,7 +110,7 @@
       <div class="flex items-center px-8 mt-8">
         <div class="pb-4 text-center flex items-center">
           <button 
-            @click="isLiked ? unlikePost : likePost"
+            @click="isLiked ? unlikePost() : likePost()"
             class="rounded-full bg-gray-200 p-2 cursor-pointer"
           >
             <Icon 
@@ -277,5 +277,47 @@
     }
     return false
   })
+
+  const likePost = async () => {
+    try {
+      await $userStore.likePost($generalStore.selectedPost, true)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const unlikePost = async () => {
+    try {
+      await $userStore.unlikePost($generalStore.selectedPost, true)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const addComment = async () => {
+    try {
+      await $userStore.addComment($generalStore.selectedPost, comment.value)
+      comment.value = null // CLEAR COMMENT VARIABLE
+      // SCROLLS TO THE TOP OF THE COMMENTS LIST AFTER SUBMIT BECAUSE THE SUBMITTED ONE IS THE LATEST ONE AND WILL APPEAR AT THE TOP
+      document.getElementById('Comment')?.scroll({top: 0, behavior:'smooth'})
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  const deleteComment = async (post, commentId) => {
+
+    console.log(post, comment);
+
+    let res = confirm('Are you sure you want to delete this comment?')
+    try {
+      if(res)
+      await $userStore.deleteComment(post, commentId)
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
 
 </script>

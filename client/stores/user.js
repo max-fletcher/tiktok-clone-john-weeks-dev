@@ -66,6 +66,42 @@ export const useUsersStore = defineStore('user', {
       })
     },
 
+    async addComment(post, comment){
+      let res = await $axios.post(`/api/comments`, {
+        post_id: post.id,
+        comment: comment
+      })
+
+      if(res.status === 200){
+        await this.updateComments(post)
+      }
+    },
+
+    async deleteComment(post, commentId){
+      let res = await $axios.delete(`/api/comments/${commentId}`, {
+        post_id: post.id
+      })
+
+      if(res.status === 200){
+        await this.updateComments(post)
+      }
+    },
+
+    // MAKES AN API 
+    async updateComments(post){
+      let res = await $axios.get(`/api/profiles/${post.user.id}`)
+
+      console.log('update comments res' ,res);
+
+      for (let i = 0; i < res.data.posts.length; i++) {
+        const updatePost = res.data.posts[i];
+
+        if(post.id === updatePost.id){
+          useGeneralStore().selectedPost.comments = updatePost.comments
+        }
+      }
+    },
+
     async likePost(post, isPostPage){
       let res = await $axios.post(`/api/like`, {
         post_id: post.id,
@@ -85,8 +121,6 @@ export const useUsersStore = defineStore('user', {
       else{
         singlePost = useGeneralStore().posts.find(p => p.id === post.id)
       }
-
-      console.log(singlePost);
 
       // PUSH THE LIKE INTO STORE
       singlePost.likes.push(res.data.like)
