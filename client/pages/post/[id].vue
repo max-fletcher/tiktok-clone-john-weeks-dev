@@ -316,7 +316,6 @@
       await $userStore.deleteComment(post, commentId)
     } catch (error) {
       console.log(error);
-      
     }
   }
 
