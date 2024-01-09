@@ -24,7 +24,20 @@ export const useProfileStore = defineStore('profile', {
       this.$state.bio = res.data.user.bio
       this.$state.image = res.data.user.image
       this.$state.posts = res.data.posts
+
+      // EXEUTE "allLikesCount" WHICH COUNTS THE NUMBER OF LIKES FOR ALL POSTS WHEN "getProfile" IS EXECUTED
+      this.allLikesCount
     },
+
+    allLikesCount(){
+      this.allLikes = 0
+
+      for (let i = 0; i < this.posts.length; i++) {
+        const post = this.posts[i];
+
+        this.allLikes += post.likes.count
+      }
+    }
 
     // Just a function so no need for async.
     resetUser(){

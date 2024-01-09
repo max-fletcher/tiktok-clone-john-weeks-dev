@@ -28,7 +28,7 @@
     </div>
     <div class="flex items-center pt-4">
       <div class="mr-4">
-        <span class="font-bold">10K</span>
+        <span class="font-bold">{{ allLikes }}</span>
         <span class="text-gray-500 font-light text-[15px] pl-1.5">Following</span>
       </div>
       <div class="mr-4">
@@ -68,10 +68,11 @@
 
   // IMPORT '$userStore', '$profileStore', '$generalStore' FROM useNuxtApp(ALIASED INSIDE plugins/store)
   const { $userStore, $profileStore, $generalStore } = useNuxtApp()
-  const { posts } = storeToRefs($profileStore) // CONVERTING '$profileStore' TO REF
+  const { posts, allLikes } = storeToRefs($profileStore) // CONVERTING '$profileStore' TO REF
   const route = useRoute()
 
   definePageMeta({
+    middleware: 'auth',
     // NOTICE THAT THE LAYOUT COMPONENT IS NAMED MainLayout BUT HERE WE ARE CALLING IT main-layout. THIS IS BECAUSE WE CAN'T USE UNDERSCORES AND CAPITALS HERE AND ANY CAMELCASE IS PARSED AS 
     // KEBAB-CASE BY NUXT FOR DEFINE-COMPOSABLES
     layout: 'main-layout',
