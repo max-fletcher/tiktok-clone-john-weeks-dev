@@ -42,7 +42,7 @@
             loop
             muted
             class="rounded-xl object-cover mx-auto h-full"
-            src="/cowe.mp4"
+            :src="post.video"
           />
           <img class="absolute right-2 bottom-14" width="90" src="~/assets/images/tiktok-logo-white.png" />
         </div>
