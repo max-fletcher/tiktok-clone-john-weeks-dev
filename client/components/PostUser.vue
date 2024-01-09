@@ -18,14 +18,14 @@
         muted
         loop
         class="aspect-[3/4] object-cover rounded-md"
-        src="/cowe.mp4"
+        :src="post.video"
         @loadeddata="startedPlaying"
       />
     </div>
 
     <div class="px-1">
       <div class="text-gray-700 text-[15px] pt-1 break-words">
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+        {{ post.text }}
         <h1>{{ isLoaded }}</h1>
       </div>
       <div class="flex items-center -ml-1 text-gray-600 font-bold text-xs">
@@ -38,7 +38,9 @@
 </template>
 
 <script setup lang="ts">
-  defineProps(['post'])
+  const { $generalStore } = useNuxtApp()
+  const props = defineProps(['post'])
+  const { post } = toRefs(props)
 
   const route = useRoute()
   const router = useRouter()
@@ -93,7 +95,7 @@
     // }
   })
 
-  // WILL PAUSE THE VIDEO, REWIND THE VIDEO BACK TO TIME=0 AND SET VIDEO SRC TO EMPTY STRING(I.E STOP THE VIDEO)
+  // WILL PAUSE THE VIDEO, REWIND THE VIDEO BACK TO TIME=0 AND SET VIDEO SRC TO EMPTY STRING
   onBeforeUnmount(() => {
     console.log('onBeforeUnmount');
     video.value.pause()
@@ -102,7 +104,9 @@
   })
 
   const displayPost = (post) => {
-    
+    $generalStore.setBackUrl("/profile/" + route.params.id) // SET BACK URL TO USER'S PROFILE PAGE
+    $generalStore.selectedPost = null
+    setTimeout(() => router.push(`/post/${post.id}`), 300) // GO TO THE CLICKED POST(i.e 'post' param) PAGE
   }
 
   const isHover = (bool) => {

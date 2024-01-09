@@ -56,8 +56,9 @@ class PostController extends Controller
     {
         try {
             $post = Post::findOrFail($id);
-            if(!is_null($post->video) && file_exists(public_path() . $post->video)){
-                unlink(asset($post->video));
+            // return response()->json(['is_null' => $post->video, 'exists' => asset($post->video), 'public_path' => public_path().$post->video], 400);
+            if(!is_null($post->video) && file_exists(public_path() . '/' . $post->video)){
+                unlink(public_path() . '/' . $post->video);
             }
             $post->delete();
 

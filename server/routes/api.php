@@ -31,7 +31,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('posts', [PostController::class, 'store']);
     Route::get('posts/{id}', [PostController::class, 'show']);
-    Route::post('posts/{id}', [PostController::class, 'destroy']);
+    Route::delete('posts/{id}', [PostController::class, 'destroy']);
 
     Route::get('profiles/{id}', [ProfileController::class, 'show']);
 

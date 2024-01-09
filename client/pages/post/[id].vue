@@ -265,6 +265,47 @@
     }
   })
 
+  const loopThroughPostsDown = () => {
+    setTimeout(() => {
+      let idArrayReversed = $generalStore.ids.reverse()
+      let isBreak = false
+
+      for (let i = 0; i < idArrayReversed.length; i++) {
+        const id = idArrayReversed[i];
+        if(id < route.params.id){
+          router.push(`/post/${id}`)
+          isBreak = true
+          return
+        }
+      }
+
+      // THIS IS TO ENSURE THAT WE LOOP TO THE BEGINNING WHEN WE REACH THE END AND i IS STILL INCREMENTED
+      if(!isBreak){
+        router.push(`/post/${idArrayReversed[0]}`)
+      }
+    }, 300)
+  }
+
+  const loopThroughPostsUp = () => {
+    setTimeout(() => {
+      let isBreak = false
+
+      for (let i = 0; i < $generalStore.ids.length; i++) {
+        const id = $generalStore.ids[i];
+        if(id > route.params.id){
+          router.push(`/post/${id}`)
+          isBreak = true
+          return
+        }
+      }
+
+      // THIS IS TO ENSURE THAT WE LOOP TO THE BEGINNING WHEN WE REACH THE END AND i IS STILL INCREMENTED
+      if(!isBreak){
+        router.push(`/post/${$generalStore.ids[0]}`)
+      }
+    }, 300)
+  }
+
   // A COMPUTED PROPERTY SO THAT THE COMPONENT IS NOT RE-RENDERED WITH EVERY CHANGE THAT HAPPENS. IN THIS SCENARIO, IF "res" CHANGES, 
   // THEN THE VALUE OF "isLiked"(BOOLEAN) CHANGES AND TRIGGERS RE-RENDER. OTHERWISE, IF WE USED A FUNCTION, THIS WILL 
   // RE-RENDER WITH EVERY PAGE LOAD/PARENT OR SIBLING RE-RENDER BECAUSE THE "find" FUNCTION WILL BE RAN EVERYTIME.
@@ -289,6 +330,19 @@
   const unlikePost = async () => {
     try {
       await $userStore.unlikePost($generalStore.selectedPost, true)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const deletePost = async () => {
+    let res = confirm('Are you sure you want to delete this post?')
+    try {
+      if(res){
+        await $userStore.deletePost($generalStore.selectedPost)
+        await $profileStore.getProfile($userStore.id)
+        router.push(`/profile/${$userStore.id}`)
+      }
     } catch (error) {
       console.log(error);
     }
