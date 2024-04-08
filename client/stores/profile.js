@@ -37,7 +37,7 @@ export const useProfileStore = defineStore('profile', {
 
         this.allLikes += post.likes.count
       }
-    }
+    },
 
     // Just a function so no need for async.
     resetUser(){
